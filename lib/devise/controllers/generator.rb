@@ -67,6 +67,7 @@ module Devise
         def base_controller
           klass = Class.new @parent do
             include Devise::Mixins::Base
+            before_filter ->{ Devise.router_name = scope }
           end
           scoped_module.const_set(:BaseController, klass)
         end

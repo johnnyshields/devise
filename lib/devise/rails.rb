@@ -14,7 +14,9 @@ module Devise
     config.before_eager_load { |app| app.reload_routes! }
 
     config.after_initialize do
-      Devise::Controllers::Generator.generate
+      Devise.controller_scopes.each do |scope|
+        Devise::Controllers::Generator.generate scope
+      end
     end
 
     initializer "devise.url_helpers" do

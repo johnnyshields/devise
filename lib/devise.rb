@@ -238,7 +238,7 @@ module Devise
 
   # If same devise is to be mounted on different engines and hence multiple controllers are needed.
   mattr_accessor :controller_scopes
-  @@controller_scopes = :devise
+  @@controller_scopes = [:devise]
 
   def self.encryptor=(value)
     warn "\n[DEVISE] To select a encryption which isn't bcrypt, you should use devise-encryptable gem.\n"
