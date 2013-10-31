@@ -15,7 +15,7 @@ module Devise
       def generate
         base_controller
         controllers.each do |controller|
-          module_controller(controller)
+          devise_module_controller(controller)
         end
       end
 
@@ -67,12 +67,13 @@ module Devise
         def base_controller
           klass = Class.new @parent do
             include Devise::Mixins::Base
-            before_filter ->{ Devise.router_name = scope }
+            before_filter ->{ Devise.router_name = self.class.class_variable_get('@@devise_scope') }
           end
+          klass.class_variable_set('@@devise_scope', scope)
           scoped_module.const_set(:BaseController, klass)
         end
 
-        def module_controller(controller)
+        def devise_module_controller(controller)
           name = controller_name(controller).to_sym 
           klass = Class.new(base_controller_name.constantize) do
             include Devise::Mixins.const_get(controller.to_s.classify)

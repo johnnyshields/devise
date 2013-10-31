@@ -77,7 +77,8 @@ module Devise
       #
       #   before_filter :my_filter, :unless => :devise_controller?
       def devise_controller?
-        is_a?(DeviseController)
+        # fix - fix this?
+        # is_a?(DeviseController)
       end
 
       # Tell warden that params authentication is allowed for that specific page.
