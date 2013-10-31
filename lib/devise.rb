@@ -6,27 +6,38 @@ require 'set'
 require 'securerandom'
 
 module Devise
-  autoload :Delegator,     'devise/delegator'
-  autoload :FailureApp,    'devise/failure_app'
-  autoload :OmniAuth,      'devise/omniauth'
-  autoload :ParamFilter,   'devise/param_filter'
-  autoload :TestHelpers,   'devise/test_helpers'
-  autoload :TimeInflector, 'devise/time_inflector'
+  autoload :Delegator,         'devise/delegator'
+  autoload :FailureApp,        'devise/failure_app'
+  autoload :OmniAuth,          'devise/omniauth'
+  autoload :ParamFilter,       'devise/param_filter'
+  autoload :TestHelpers,       'devise/test_helpers'
+  autoload :TimeInflector,     'devise/time_inflector'
 
   module Controllers
-    autoload :Helpers, 'devise/controllers/helpers'
-    autoload :Rememberable, 'devise/controllers/rememberable'
-    autoload :ScopedViews, 'devise/controllers/scoped_views'
-    autoload :UrlHelpers, 'devise/controllers/url_helpers'
+    autoload :Generator,       'devise/controllers/generator'
+    autoload :Helpers,         'devise/controllers/helpers'
+    autoload :Rememberable,    'devise/controllers/rememberable'
+    autoload :ScopedViews,     'devise/controllers/scoped_views'
+    autoload :UrlHelpers,      'devise/controllers/url_helpers'
   end
 
   module Mailers
-    autoload :Helpers, 'devise/mailers/helpers'
+    autoload :Helpers,         'devise/mailers/helpers'
   end
 
   module Strategies
-    autoload :Base, 'devise/strategies/base'
+    autoload :Base,            'devise/strategies/base'
     autoload :Authenticatable, 'devise/strategies/authenticatable'
+  end
+
+  module Mixins
+    autoload :Base,             'devise/mixins/base'
+    autoload :Confirmation,     'devise/mixins/confirmation'
+    autoload :OmniauthCallback, 'devise/mixins/omniauth_callback'
+    autoload :Password,         'devise/mixins/password'
+    autoload :Registration,     'devise/mixins/registration'
+    autoload :Session,          'devise/mixins/session'
+    autoload :Unlock,           'devise/mixins/unlock'
   end
 
   # Constants which holds devise configuration for extensions. Those should
@@ -224,6 +235,10 @@ module Devise
   # Set if we should clean up the CSRF Token on authentication
   mattr_accessor :clean_up_csrf_token_on_authentication
   @@clean_up_csrf_token_on_authentication = true
+
+  # If same devise is to be mounted on different engines and hence multiple controllers are needed.
+  mattr_accessor :controller_scopes
+  @@controller_scopes = :devise
 
   def self.encryptor=(value)
     warn "\n[DEVISE] To select a encryption which isn't bcrypt, you should use devise-encryptable gem.\n"
