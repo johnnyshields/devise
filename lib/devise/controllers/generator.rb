@@ -6,14 +6,12 @@ module Devise
 
       attr_reader :scope, :controllers
 
-      def initialize(scope = :devise, parent = "ApplicationController", *controllers)
+      def initialize(scope = :devise, *controllers)
         @scope       = scope.to_sym
-        @parent      = parent.constantize
+        @parent      = parent_controller
         @controllers = only_available(controllers)
       end
 
-      # First generate the `Devise::BaseController < ApplicationController`
-      # then generate the `Devise::SessionsController < Devise::BaseController`
       def generate
         base_controller
         controllers.each do |controller|
@@ -22,8 +20,8 @@ module Devise
       end
 
       class << self
-        def generate(scope = :devise, parent = "ApplicationController", *controllers)
-          new(scope, parent, *controllers).generate
+        def generate(scope = :devise, *controllers)
+          new(scope, *controllers).generate
         end
       end
 
@@ -42,14 +40,28 @@ module Devise
           end
         end
 
+        def parent_controller
+          if scope == :devise
+            Devise.parent_controller.to_s
+          else
+            "#{scope.to_s.classify}::ApplicationController"
+          end.constantize
+        end
+
         def controller_name(option)
           "#{option.to_s.classify.pluralize}Controller"
         end
 
-        def scoped_module
+        def root_module
           scope.to_s.classify.constantize
         rescue StandardError
           Object.const_set(scope.to_s.classify, Module.new)
+        end
+        
+        def scoped_module
+          (scope == :devise) ? root_module : "#{root_module}::Devise".constantize
+        rescue StandardError
+          root_module.const_set(:Devise, Module.new)
         end
 
         def base_controller
