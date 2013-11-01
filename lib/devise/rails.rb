@@ -13,7 +13,7 @@ module Devise
     # Force routes to be loaded if we are doing any eager load.
     config.before_eager_load { |app| app.reload_routes! }
 
-    config.after_initialize do
+    config.to_prepare do
       Devise.controller_scopes.each do |scope|
         Devise::Controllers::Generator.generate scope
       end
