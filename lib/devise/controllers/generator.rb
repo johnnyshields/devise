@@ -64,12 +64,18 @@ module Devise
           root_module.const_set(:Devise, Module.new)
         end
 
+        def set_devise_router
+          @parent.class_variable_set('@@devise_controller_scope', scope)
+          @parent.class_eval do
+            before_filter ->{ debugger; Devise.router_name = self.class.class_variable_get('@@devise_controller_scope') }
+          end
+        end
+
         def base_controller
+          set_devise_router
           klass = Class.new @parent do
             include Devise::Mixins::Base
-            before_filter ->{ Devise.router_name = self.class.class_variable_get('@@devise_scope') }
           end
-          klass.class_variable_set('@@devise_scope', scope)
           scoped_module.const_set(:BaseController, klass)
         end
 
