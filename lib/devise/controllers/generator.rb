@@ -73,18 +73,25 @@ module Devise
 
         def base_controller
           set_devise_router
-          klass = Class.new @parent do
-            include Devise::Mixins::Base
-          end
-          scoped_module.const_set(:BaseController, klass)
+          klass = find_or_create_class(:BaseController)
+          klass.send(:include, Devise::Mixins::Base)
         end
 
         def devise_module_controller(controller)
-          name = controller_name(controller).to_sym 
-          klass = Class.new(base_controller_name.constantize) do
-            include Devise::Mixins.const_get(controller.to_s.classify)
+          name = controller_name(controller).to_sym
+          mixin = Devise::Mixins.const_get(controller.to_s.classify)
+          klass = find_or_create_class(name, base_controller_name)
+          klass.send(:include, mixin)
+        end
+
+        def find_or_create_class(name, parent_name = nil)
+          parent = (parent_name || @parent).to_s.constantize
+
+          if scoped_module.constants.include?(name)
+            scoped_module.const_get(name)
+          else
+            scoped_module.const_set(name, Class.new(parent))
           end
-          scoped_module.const_set(name, klass)
         end
 
     end
