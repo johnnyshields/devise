@@ -17,25 +17,35 @@ module Devise
   autoload :TokenGenerator,     'devise/token_generator'
 
   module Controllers
-    autoload :Helpers, 'devise/controllers/helpers'
-    autoload :Rememberable, 'devise/controllers/rememberable'
-    autoload :ScopedViews, 'devise/controllers/scoped_views'
-    autoload :SignInOut, 'devise/controllers/sign_in_out'
-    autoload :StoreLocation, 'devise/controllers/store_location'
-    autoload :UrlHelpers, 'devise/controllers/url_helpers'
+    autoload :Helpers,          'devise/controllers/helpers'
+    autoload :Rememberable,     'devise/controllers/rememberable'
+    autoload :ScopedViews,      'devise/controllers/scoped_views'
+    autoload :SignInOut,        'devise/controllers/sign_in_out'
+    autoload :StoreLocation,    'devise/controllers/store_location'
+    autoload :UrlHelpers,       'devise/controllers/url_helpers'
   end
 
   module Hooks
-    autoload :Proxy, 'devise/hooks/proxy'
+    autoload :Proxy,            'devise/hooks/proxy'
   end
 
   module Mailers
-    autoload :Helpers, 'devise/mailers/helpers'
+    autoload :Helpers,          'devise/mailers/helpers'
+  end
+
+  module Mixins
+    autoload :Base,             'devise/mixins/base'
+    autoload :Confirmation,     'devise/mixins/confirmation'
+    autoload :OmniauthCallback, 'devise/mixins/omniauth_callback'
+    autoload :Password,         'devise/mixins/password'
+    autoload :Registration,     'devise/mixins/registration'
+    autoload :Session,          'devise/mixins/session'
+    autoload :Unlock,           'devise/mixins/unlock'
   end
 
   module Strategies
-    autoload :Base, 'devise/strategies/base'
-    autoload :Authenticatable, 'devise/strategies/authenticatable'
+    autoload :Base,             'devise/strategies/base'
+    autoload :Authenticatable,  'devise/strategies/authenticatable'
   end
 
   # Constants which holds devise configuration for extensions. Those should
