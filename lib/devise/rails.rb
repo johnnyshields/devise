@@ -13,6 +13,19 @@ module Devise
     # Force routes to be loaded if we are doing any eager load.
     config.before_eager_load { |app| app.reload_routes! }
 
+    # Removing the controllers constants. Since controllers are lazily-loaded need to get them first.
+    config.after_initialize do
+      unless Devise.generate_controllers
+        %w(confirmation omniauth_callback password registration session unlock).each do |mod|
+          controller_name = mod.classify.pluralize + 'Controller'
+          Devise.const_get(controller_name.to_sym)
+          Devise.send(:remove_const, controller_name.to_sym)
+        end
+        Object.const_get(:DeviseController)
+        Object.send(:remove_const, :DeviseController)
+      end
+    end
+
     initializer "devise.url_helpers" do
       Devise.include_helpers(Devise::Controllers)
     end
